@@ -22,10 +22,40 @@ class PostTest extends TestCase
     }
 
     /** @test */
-    function comments()
+    function commentsリレーションのテスト()
     {
         $post = Post::factory()->create();
 
         $this->assertInstanceOf(Collection::class, $post->comments);
+    }
+
+    /** @test */
+    function ブログの詳細画面が表示できる()
+    {
+        $post = Post::factory()->create();
+
+        $this->get('posts/' . $post->id)
+            ->assertOk()
+            ->assertSee($post->title)
+            ->assertSee($post->user->name);
+    }
+
+    /** @test */
+    function ブログで非公開のものは、詳細画面で表示できない()
+    {
+
+    }
+
+    /** @test */
+    function ブログの公開・非公開のscope()
+    {
+        $post1 = Post::factory()->closed()->create();
+        $post2 = Post::factory()->create();
+
+        $posts = Post::onlyOpen()->get();
+
+        $this->assertFalse($posts->contains($post1));
+        $this->assertTrue($posts->contains($post2));
+
     }
 }
