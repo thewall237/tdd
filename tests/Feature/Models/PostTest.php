@@ -43,6 +43,10 @@ class PostTest extends TestCase
     /** @test */
     function ブログで非公開のものは、詳細画面で表示できない()
     {
+        $post = Post::factory()->closed()->create();
+
+        $this->get('posts/' . $post->id)
+            ->assertForbidden();
 
     }
 
@@ -56,6 +60,17 @@ class PostTest extends TestCase
 
         $this->assertFalse($posts->contains($post1));
         $this->assertTrue($posts->contains($post2));
+
+    }
+
+    /** @test */
+    function ブログが非公開の時は、trueを返し、公開時は、falseを返す()
+    {
+        $open = Post::factory()->make();
+        $closed = Post::factory()->closed()->make();
+
+        $this->assertFalse($open->isClosed());
+        $this->assertTrue($closed->isClosed());
 
     }
 }

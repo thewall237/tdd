@@ -16,15 +16,18 @@ class PostController extends Controller
             ->orderByDesc('comments_count')
             ->get();
 
-        return view('index', [
-            'posts' => $posts
-        ]);
+        return view('index', ['posts' => $posts]);
     }
 
     public function show(Post $post)
     {
-        return view('posts.show', [
-            'post' => $post,
-        ]);
+        // if($post->status == Post::CLOSED) {
+        //     abort(403);
+        // }
+        if($post->isClosed()) {
+            abort(403);
+        }
+
+        return view('posts.show', ['post' => $post,]);
     }
 }
