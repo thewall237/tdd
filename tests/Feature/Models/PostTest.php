@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class PostTest extends TestCase
 {
-    use RefreshDatabase;
+    // use RefreshDatabase;
 
     /** @test */
     function userリレーションを返す()
@@ -27,27 +27,6 @@ class PostTest extends TestCase
         $post = Post::factory()->create();
 
         $this->assertInstanceOf(Collection::class, $post->comments);
-    }
-
-    /** @test */
-    function ブログの詳細画面が表示できる()
-    {
-        $post = Post::factory()->create();
-
-        $this->get('posts/' . $post->id)
-            ->assertOk()
-            ->assertSee($post->title)
-            ->assertSee($post->user->name);
-    }
-
-    /** @test */
-    function ブログで非公開のものは、詳細画面で表示できない()
-    {
-        $post = Post::factory()->closed()->create();
-
-        $this->get('posts/' . $post->id)
-            ->assertForbidden();
-
     }
 
     /** @test */
